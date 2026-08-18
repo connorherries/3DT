@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Learn · Sports Analytics Learning Hub{% endblock %}
+{% block content %}
+<div class="page-header"><div><p class="eyebrow">LEARN</p><h1>Understand the numbers</h1><p>Start with basic statistics, then use the grouped analysis to see how roles differ by position.</p></div></div>
+<div class="learning-grid">
+    {% for key, title in [('pts_per_game','Points per game'),('rpg','Rebounds per game'),('apg','Assists per game'),('spg','Steals per game'),('bpg','Blocks per game'),('ft_pct','Free-throw percentage')] %}
+    <article class="info-card"><h2>{{ title }}</h2><p>{{ metric_explanations[key] }}</p></article>
+    {% endfor %}
+</div>
+<section class="section-head"><div><p class="eyebrow">POSITION ANALYSIS</p><h2>Average statistics by position</h2></div></section>
+<div class="table-card"><table><thead><tr><th>Position</th><th>Players</th><th>Avg Points</th><th>Avg Rebounds</th><th>Avg Assists</th><th>Avg Impact</th></tr></thead><tbody>
+{% for row in positions %}<tr><td>{{ row.position }}</td><td>{{ row.players }}</td><td>{{ row.avg_points }}</td><td>{{ row.avg_rebounds }}</td><td>{{ row.avg_assists }}</td><td>{{ row.avg_impact }}</td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Basket Metrics{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav class="nav">
+    <div class="nav-inner">
+        <a class="brand" href="{{ url_for('home') }}">Basket Metrics</a>
+        <div class="links">
+            <a href="{{ url_for('players') }}">Players</a>
+            <a href="{{ url_for('compare') }}">Compare</a>
+            <a href="{{ url_for('learn') }}">Learn</a>
+            <a href="{{ url_for('quiz') }}">Quiz</a>
+        </div>
+    </div>
+</nav>
+<main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+</main>
+<footer class="footer">
+
+    <div class="footer-social">
+        <h3>Basket Metrics</h3>
+        <p>Learn basketball through real data.</p>
+
+        <div class="social-links">
+            <a href="#" aria-label="Facebook">Facebook</a>
+            <a href="#" aria-label="Instagram">Instagram</a>
+            <a href="#" aria-label="GitHub">GitHub</a>
+        </div>
+    </div>
+
+    <div class="footer-newsletter">
+        <h3>Stay updated</h3>
+
+        <form action="#" method="post">
+            <input
+                type="email"
+                name="email"
+                placeholder="Email address"
+                required
+            >
+            <button type="submit">Subscribe</button>
+        </form>
+    </div>
+
+    <div class="footer-links">
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('players') }}">Players</a>
+        <a href="{{ url_for('compare') }}">Compare</a>
+        <a href="{{ url_for('learn') }}">Learn</a>
+        <a href="{{ url_for('quiz') }}">Quiz</a>
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2026 Basket Metrics · Educational project</p>
+    </div>
+
+</footer>
+</body>
+</html>

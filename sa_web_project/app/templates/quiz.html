@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Quiz · Sports Analytics Learning Hub{% endblock %}
+{% block content %}
+<div class="page-header"><div><p class="eyebrow">ACTIVE RECALL</p><h1>Test your analytics knowledge</h1><p>Each question is generated from live player records.</p></div></div>
+<form method="post" class="quiz-form">
+{% for q in questions %}
+<div class="quiz-card">
+    <h2>Q{{ loop.index }}</h2><p>{{ q.question }}</p>
+    <input type="hidden" name="question" value="{{ q.question }}">
+    <input type="hidden" name="correct_{{ loop.index0 }}" value="{{ q.winner }}">
+    <label><input type="radio" name="answer_{{ loop.index0 }}" value="{{ q.left }}" required> {{ q.left }}</label>
+    <label><input type="radio" name="answer_{{ loop.index0 }}" value="{{ q.right }}"> {{ q.right }}</label>
+</div>
+{% endfor %}
+<button class="button" type="submit">Submit quiz</button>
+</form>
+{% endblock %}

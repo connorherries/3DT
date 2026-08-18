@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Home · Sports Analytics Learning Hub{% endblock %}
+{% block content %}
+<section class="hero">
+    <div>
+        <p class="eyebrow">SPORTS × EDUCATION</p>
+        <h1>Learn basketball analytics through real player data.</h1>
+        <p class="lead">Explore professional statistics, compare players, understand what the numbers mean, and test your knowledge.</p>
+        <div class="actions">
+            <a class="button" href="{{ url_for('players') }}">Explore players</a>
+            <a class="button secondary" href="{{ url_for('quiz') }}">Take the quiz</a>
+        </div>
+    </div>
+    <div class="hero-card">
+        <div class="mini-label">PROJECT FOCUS</div>
+        <strong>Performance tracking + engaging learning</strong>
+        <p>The interface keeps basic information visible first, then lets users go deeper into analysis.</p>
+    </div>
+</section>
+
+<section class="section-head">
+    <div>
+        <p class="eyebrow">LEADERBOARD</p>
+        <h2>Top players by Composite Impact</h2>
+    </div>
+    <a href="{{ url_for('players') }}">View all →</a>
+</section>
+<div class="table-card">
+<table>
+<thead><tr><th>Player</th><th>Team</th><th>Pos</th><th>PPG</th><th>RPG</th><th>APG</th><th>Impact</th></tr></thead>
+<tbody>
+{% for row in leaderboard %}
+<tr>
+<td><a class="player-link" href="{{ url_for('player', player_name=row.player) }}">{{ row.player }}</a></td>
+<td>{{ row.team }}</td><td>{{ row.position }}</td>
+<td>{{ '%.1f'|format(row.pts_per_game) }}</td>
+<td>{{ '%.1f'|format(row.rpg) }}</td>
+<td>{{ '%.1f'|format(row.apg) }}</td>
+<td>{{ '%.1f'|format(row.composite_impact) }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Players · Sports Analytics Learning Hub{% endblock %}
+{% block content %}
+<div class="page-header"><div><p class="eyebrow">DATABASE</p><h1>Explore players</h1><p>Search and filter the MySQL-backed player database.</p></div></div>
+<form class="filter-bar" method="get">
+    <input name="search" value="{{ search }}" placeholder="Search player name...">
+    <select name="position">
+        <option value="ALL">All positions</option>
+        {% for pos in positions %}<option value="{{ pos }}" {% if pos == selected_position %}selected{% endif %}>{{ pos }}</option>{% endfor %}
+    </select>
+    <button class="button" type="submit">Search</button>
+</form>
+<div class="table-card">
+<table>
+<thead><tr><th>Player</th><th>Team</th><th>Pos</th><th>Games</th><th>PPG</th><th>RPG</th><th>APG</th><th>Impact</th></tr></thead>
+<tbody>
+{% for row in players %}
+<tr>
+<td><a class="player-link" href="{{ url_for('player', player_name=row.player) }}">{{ row.player }}</a></td>
+<td>{{ row.team }}</td><td>{{ row.position }}</td><td>{{ row.games }}</td>
+<td>{{ '%.1f'|format(row.pts_per_game) }}</td><td>{{ '%.1f'|format(row.rpg) }}</td>
+<td>{{ '%.1f'|format(row.apg) }}</td><td>{{ '%.1f'|format(row.composite_impact) }}</td>
+</tr>
+{% else %}<tr><td colspan="8">No players matched your search.</td></tr>{% endfor %}
+</tbody>
+</table>
+</div>
+{% endblock %}

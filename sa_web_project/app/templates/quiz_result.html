@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}Quiz result · Sports Analytics Learning Hub{% endblock %}
+{% block content %}
+<section class="result-card"><p class="eyebrow">RESULT</p><h1>{{ score }}/{{ total }}</h1><p>{{ '%.1f'|format((score / total * 100) if total else 0) }}% correct.</p><a class="button" href="{{ url_for('quiz') }}">Try again</a></section>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Compare · Sports Analytics Learning Hub{% endblock %}
+{% block content %}
+<div class="page-header"><div><p class="eyebrow">ANALYTICS</p><h1>Compare players</h1><p>Select two players and generate a NumPy/Matplotlib comparison.</p></div></div>
+<form class="compare-form" method="post">
+    <label>First player<select name="first" required><option value="">Select...</option>{% for row in players %}<option value="{{ row.player }}" {% if row.player == selected_first %}selected{% endif %}>{{ row.player }}</option>{% endfor %}</select></label>
+    <label>Second player<select name="second" required><option value="">Select...</option>{% for row in players %}<option value="{{ row.player }}" {% if row.player == selected_second %}selected{% endif %}>{{ row.player }}</option>{% endfor %}</select></label>
+    <button class="button" type="submit">Generate comparison</button>
+</form>
+{% if comparison is not none %}
+<div class="chart-card"><img src="{{ chart_url }}?v={{ range(1, 1000000)|random }}" alt="Player comparison chart"></div>
+<div class="table-card"><table><thead><tr><th>Metric</th>{% for player in comparison.index %}<th>{{ player }}</th>{% endfor %}</tr></thead><tbody>
+{% for metric, label in [('pts_per_game','Points'),('rpg','Rebounds'),('apg','Assists'),('spg','Steals'),('bpg','Blocks'),('ft_pct','FT%'),('composite_impact','Composite Impact'),('balanced_score','Balanced score')] %}<tr><td>{{ label }}</td>{% for player in comparison.index %}<td>{{ '%.3f'|format(comparison.loc[player, metric]) }}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div>
+{% endif %}
+{% endblock %}

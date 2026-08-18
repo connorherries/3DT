@@ -1,0 +1,5 @@
+player,age,team,position,games,minutes_per_game,fg_pct,three_pct,ft_pct,oreb_per_game,dreb_per_game,rpg,apg,spg,bpg,tov_per_game,pts_per_game
+Valid Player,20,TST,PG,20,30.0,0.500,0.350,0.800,1.0,4.0,5.0,4.0,1.2,0.5,2.0,20.0
+Missing Player,21,TST,SG,18,28.0,0.470,,0.810,0.8,3.0,3.8,3.0,1.0,0.3,2.0,18.0
+String In Numeric,22,TST,SF,not_a_number,25.0,0.480,0.360,0.790,0.9,3.2,4.1,2.8,0.8,0.4,2.2,17.0
+,,,,,,,,,,,,,,,,

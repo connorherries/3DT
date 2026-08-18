@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}{{ player.player }} · Sports Analytics Learning Hub{% endblock %}
+{% block content %}
+<div class="player-hero">
+    <div><p class="eyebrow">PLAYER STUDY</p><h1>{{ player.player }}</h1><p>{{ player.team }} · {{ player.position }} · Age {{ player.age }}</p></div>
+    <a class="button secondary" href="{{ url_for('compare', first=player.player) }}">Compare player</a>
+</div>
+<div class="metric-grid">
+    {% for key, label in [('pts_per_game','Points'),('rpg','Rebounds'),('apg','Assists'),('spg','Steals'),('bpg','Blocks'),('ft_pct','FT%'),('composite_impact','Impact'),('balanced_score','Balanced score')] %}
+    <div class="metric-card"><span>{{ label }}</span><strong>{{ '%.2f'|format(player[key]) }}</strong><small>{{ metric_explanations.get(key,'') }}</small></div>
+    {% endfor %}
+</div>
+<div class="two-column">
+<section class="info-card"><p class="eyebrow">EDUCATIONAL BREAKDOWN</p><h2>What should you notice?</h2>
+<p>Use the basic statistics first, then compare the player's composite and balanced scores. The composite score is an original educational calculation rather than an official league metric.</p>
+</section>
+<section class="info-card"><p class="eyebrow">SEASON</p><h2>{{ player.season }}</h2><p>{{ player.games }} games · {{ '%.1f'|format(player.minutes_per_game) }} minutes per game</p></section>
+</div>
+{% endblock %}
