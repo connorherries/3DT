@@ -4,8 +4,12 @@ from pathlib import Path
 
 from flask import Flask, flash, redirect, render_template, request, url_for
 
-from analysis import build_quiz_questions, compare_players, plot_comparison, prepare_dataset
-import database
+try:
+    from .analysis import build_quiz_questions, compare_players, plot_comparison, prepare_dataset
+    from . import database
+except ImportError:  # pragma: no cover - script execution fallback
+    from analysis import build_quiz_questions, compare_players, plot_comparison, prepare_dataset
+    import database
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_PATH = ROOT / "data" / "nba_player_stats_2023_24.csv"

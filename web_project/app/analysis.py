@@ -179,16 +179,19 @@ def position_summary(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def compare_players(df: pd.DataFrame, first: str, second: str) -> pd.DataFrame:
-    """Return side-by-side metrics for two named players."""
+    """Return side-by-side metrics for two named players in the requested order."""
     lookup = {name.lower(): name for name in df["player"]}
     if first.lower() not in lookup or second.lower() not in lookup:
         raise ValueError("Both player names must exist in the dataset.")
-    players = [lookup[first.lower()], lookup[second.lower()]]
+
+    ordered_names = [lookup[first.lower()], lookup[second.lower()]]
     cols = [
         "pts_per_game", "rpg", "apg", "spg", "bpg", "ft_pct",
         "composite_impact", "balanced_score",
     ]
-    return df[df["player"].isin(players)][["player", "position"] + cols].set_index("player")
+    ordered = df[df["player"].isin(ordered_names)][["player", "position"] + cols]
+    ordered = ordered.set_index("player")
+    return ordered.loc[ordered_names]
 
 
 def correlation_matrix(df: pd.DataFrame) -> pd.DataFrame:

@@ -1,8 +1,12 @@
 """One-time/automatic CSV -> cleaned analysis -> MySQL importer."""
 from pathlib import Path
 
-import database
-from analysis import prepare_dataset
+try:
+    from . import database
+    from .analysis import prepare_dataset
+except ImportError:  # pragma: no cover - script execution fallback
+    import database
+    from analysis import prepare_dataset
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_PATH = ROOT / "data" / "nba_player_stats_2023_24.csv"
