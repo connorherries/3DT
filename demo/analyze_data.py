@@ -1,4 +1,10 @@
-"""Clean the NBA CSV, calculate analysis metrics, and export demo data."""
+"""Prepare the basketball dataset for the website.
+
+This script is the data engine behind the project: it reads the raw CSV, removes broken rows,
+cleans the numbers, trims the roster to a teaching-sized dataset, calculates impact metrics,
+and exports the JSON files that the front-end pages use. In simple terms, it transforms the
+original spreadsheet into a version that is easier to understand and display in the site.
+"""
 from __future__ import annotations
 
 import argparse
@@ -12,6 +18,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+# These paths tell the script where the raw dataset lives and where the generated website data should be written.
+# The generated folder is then used by demo.js to populate the pages, so this step is a key link between
+# the spreadsheet and the visual interface.
 DEMO_DIR = Path(__file__).resolve().parent
 INPUT_CSV = DEMO_DIR / "data" / "csv"
 OUTPUT_DIR = DEMO_DIR / "generated"

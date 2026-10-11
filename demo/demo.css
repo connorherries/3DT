@@ -1,4 +1,7 @@
-/* Change these values to change the site's colors */
+/* This stylesheet controls the look and feel of the whole project.
+   It sets the colours, spacing, navbar styling, button look, and the card and form panels
+   used across the pages. Because every page links to this CSS file, the site keeps a consistent brand.
+*/
 :root {
 	/* Main page text and background */
 	--color-page: #ffffff;

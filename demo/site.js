@@ -1,4 +1,7 @@
-// Add the same navigation and footer to each page.
+// This file builds the shared header and footer used on every page in the project.
+// It keeps the website consistent and makes navigation easy, while the individual pages
+// still handle their own content. The rest of the app loads player data from the
+// generated JSON files and the page-specific HTML decides what to display.
 const pageLinks = [
 	["Home", "index.html"],
 	["Players", "players.html"],
