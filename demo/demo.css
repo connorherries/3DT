@@ -1,0 +1,161 @@
+/* Change these values to change the site's colors */
+:root {
+	/* Main page text and background */
+	--color-page: #ffffff;
+	--color-text: #202722;
+	--color-muted: #68716a;
+
+	/* Navigation and footer */
+	--color-navbar: #203d38;
+	--color-navbar-text: #ffffff;
+	--color-footer: #203d38;
+	--color-footer-text: #ffffff;
+
+	/* Accent and panel colors */
+	--color-accent: #a83c2e;
+	--color-highlight: #c7d273;
+	--color-panel: #203d38;
+	--color-border: #ffffff;
+	--color-form-panel: #ffffff;
+}
+
+/* Main page look */
+body {
+	background: var(--color-page);
+	color: var(--color-text);
+	padding-top: 58px;
+}
+
+.site-navbar {
+	background: var(--color-navbar);
+	color: var(--color-navbar-text);
+}
+
+#site-footer {
+	background: var(--color-footer);
+	color: var(--color-footer-text);
+}
+
+.text-secondary {
+	color: var(--color-muted) !important;
+}
+
+.navbar-brand img {
+	object-fit: contain;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+	color: var(--color-navbar-text);
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link.active {
+	color: var(--color-highlight);
+}
+
+.eyebrow {
+	color: var(--color-accent);
+	font-size: 0.75rem;
+	font-weight: bold;
+	letter-spacing: 0.08rem;
+}
+
+.site-navbar .eyebrow {
+	color: var(--color-accent);
+}
+
+.home-hero {
+	border-top: 1px solid var(--color-border);
+	border-bottom: 1px solid var(--color-border);
+}
+
+.home-title {
+	font-family: "DM Serif Display", Georgia, serif;
+	font-weight: 400;
+}
+
+.impact-box,
+.stat-tile {
+	background: var(--color-panel);
+	color: white;
+}
+
+.impact-box {
+	border-bottom: 5px solid var(--color-highlight);
+}
+
+.impact-box strong,
+.impact-number,
+.score-result {
+	color: var(--color-highlight);
+	font-weight: bold;
+}
+
+.impact-box strong,
+.score-result {
+	display: block;
+	font-size: 3.5rem;
+}
+
+.impact-number {
+	padding: 0.75rem 1rem;
+	background: var(--color-panel);
+}
+
+.stat-tile small,
+.stat-tile span {
+	display: block;
+}
+
+.stat-tile small {
+	color: var(--color-highlight);
+}
+
+.stat-tile strong {
+	display: block;
+	margin: 0.75rem 0 0.25rem;
+	font-size: 1.75rem;
+}
+
+.quiz-box,
+.form-panel {
+	max-width: 42rem;
+	margin: 2rem auto;
+	padding: 1.5rem;
+	border-top: 3px solid var(--color-accent);
+	background: var(--color-form-panel);
+}
+
+.compare-first-bar {
+	background-color: var(--color-highlight);
+}
+
+.compare-second-bar {
+	background-color: var(--color-accent);
+}
+
+#site-footer a {
+	color: var(--color-footer-text);
+}
+
+#site-footer a:hover {
+	color: var(--color-highlight);
+}
+
+.btn-success {
+	--bs-btn-bg: var(--color-panel);
+	--bs-btn-border-color: var(--color-panel);
+	--bs-btn-hover-bg: #31584f;
+	--bs-btn-hover-border-color: #31584f;
+}
+
+.btn-outline-success {
+	--bs-btn-color: var(--color-panel);
+	--bs-btn-border-color: var(--color-panel);
+	--bs-btn-hover-bg: var(--color-panel);
+	--bs-btn-hover-border-color: var(--color-panel);
+}
+
+.footer-header {
+	color: var(--color-highlight);
+}

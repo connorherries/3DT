@@ -1,0 +1,57 @@
+{
+  "player_count": 482,
+  "mean_points": 10.63,
+  "std_points": 6.02,
+  "mean_impact": 21.72,
+  "top_scorer": "Luka Dončić",
+  "position_summary": [
+    {
+      "position": "PG",
+      "player_count": 84,
+      "average_points": 11.96,
+      "average_impact": 23.91
+    },
+    {
+      "position": "SG",
+      "player_count": 130,
+      "average_points": 10.13,
+      "average_impact": 19.28
+    },
+    {
+      "position": "SF",
+      "player_count": 86,
+      "average_points": 11.7,
+      "average_impact": 22.46
+    },
+    {
+      "position": "PF",
+      "player_count": 92,
+      "average_points": 10.14,
+      "average_impact": 21.04
+    },
+    {
+      "position": "C",
+      "player_count": 90,
+      "average_points": 9.56,
+      "average_impact": 23.18
+    }
+  ],
+  "cleaning_report": {
+    "original_rows": 734,
+    "removed_blank_rows": 0,
+    "removed_invalid_rows": 1,
+    "filled_numeric_values": {
+      "3P%": {
+        "count": 51,
+        "median": 0.343
+      }
+    },
+    "removed_trade_split_rows": 132,
+    "duplicates_removed": 19,
+    "cleaned_rows": 582,
+    "players_before_selection": 582,
+    "removed_bottom_impact_players": 100,
+    "final_rows": 482,
+    "lowest_retained_impact": 8.530000000000001
+  }
+}

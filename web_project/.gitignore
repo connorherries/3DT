@@ -1,5 +1,0 @@
-__pycache__/
-*.pyc
-.pytest_cache/
-app/static/generated/*.png
-.env
