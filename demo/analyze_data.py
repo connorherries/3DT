@@ -15,7 +15,7 @@ import pandas as pd
 DEMO_DIR = Path(__file__).resolve().parent
 INPUT_CSV = DEMO_DIR / "data" / "csv"
 OUTPUT_DIR = DEMO_DIR / "generated"
-BOTTOM_PLAYERS_TO_REMOVE = 100
+BOTTOM_PLAYERS_TO_REMOVE = 200
 
 REQUIRED_COLUMNS = [
     "Player", "Age", "Team", "Pos", "G", "MP", "3P%", "TRB",
@@ -133,24 +133,28 @@ def clean_data(data: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
     return work, report
 
 
-def retain_highest_impact(
+def trim_dataset(
     data: pd.DataFrame,
-    remove_count: int = BOTTOM_PLAYERS_TO_REMOVE,
+    trim_count: int = BOTTOM_PLAYERS_TO_REMOVE,
 ) -> tuple[pd.DataFrame, dict]:
-    """Exclude the lowest impact scores, keeping a stable impact-ranked dataset."""
-    if remove_count < 0:
-        raise ValueError("remove_count cannot be negative")
-    if "impact" not in data.columns:
-        raise ValueError("Calculate impact metrics before selecting players.")
-    ranked = data.sort_values("impact", ascending=False, kind="stable").reset_index(drop=True)
-    retained_count = max(1, len(ranked) - remove_count) if len(ranked) else 0
-    retained = ranked.head(retained_count).copy()
-    return retained, {
-        "players_before_selection": len(ranked),
-        "removed_bottom_impact_players": len(ranked) - len(retained),
+    """Reduce the dataset to a teaching-sized roster by dropping the lowest-scoring players."""
+    if trim_count < 0:
+        raise ValueError("trim_count cannot be negative")
+    if "PTS" not in data.columns:
+        raise ValueError("Calculate points per game before trimming the dataset.")
+
+    ranked = data.sort_values("PTS", ascending=False, kind="stable").reset_index(drop=True)
+    retained_count = max(0, len(ranked) - trim_count) if len(ranked) else 0
+    retained = ranked.head(retained_count).copy() if retained_count else pd.DataFrame(columns=ranked.columns)
+    removed_count = len(ranked) - len(retained)
+    report = {
+        "players_before_trim": len(ranked),
+        "trimmed_players_count": removed_count,
         "final_rows": len(retained),
+        "lowest_retained_points": float(retained["PTS"].min()) if len(retained) else None,
         "lowest_retained_impact": float(retained["impact"].min()) if len(retained) else None,
     }
+    return retained, report
 
 
 def calculate_metrics(data: pd.DataFrame) -> pd.DataFrame:
@@ -232,9 +236,6 @@ def make_player_records(data: pd.DataFrame) -> list[dict]:
             "blocks": round(float(row["BLK"]), 1),
             "three": round(float(row["3P%"] * 100), 1),
             "impact": round(float(row["impact"]), 1),
-            "impact_z": round(float(row["impact_z"]), 3),
-            "points_percentile": round(float(row["points_percentile"]), 1),
-            "balanced_score": float(row["balanced_score"]),
             "photo": f"images/{PHOTO_BY_PLAYER_ID[player_id]}"
             if player_id in PHOTO_BY_PLAYER_ID else "",
         })
@@ -309,7 +310,7 @@ def generate_analysis(
     cleaned_data, cleaning_report = clean_data(raw_data)
     cleaning_report["cleaned_rows"] = cleaning_report.pop("final_rows")
     all_metrics = calculate_metrics(cleaned_data)
-    featured_data, selection_report = retain_highest_impact(all_metrics)
+    featured_data, selection_report = trim_dataset(all_metrics)
     cleaning_report.update(selection_report)
     analysed_data = calculate_metrics(featured_data)
     summary = build_summary(analysed_data, cleaning_report)
@@ -322,10 +323,13 @@ def generate_analysis(
         plot_analysis(analysed_data, chart_path, average_metric=metric)
         chart_paths[f"chart_{metric}"] = chart_path
     players_path.write_text(
-        json.dumps(make_player_records(analysed_data), ensure_ascii=False, indent=2),
+        json.dumps(make_player_records(analysed_data), ensure_ascii=False, separators=(",", ":")),
         encoding="utf-8",
     )
-    summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+    summary_path.write_text(
+        json.dumps(summary, ensure_ascii=False, separators=(",", ":")),
+        encoding="utf-8",
+    )
     analysed_data.to_csv(cleaned_path, index=False)
     return {
         "players": players_path,

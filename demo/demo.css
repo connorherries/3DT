@@ -127,7 +127,7 @@ body {
 }
 
 .compare-first-bar {
-	background-color: var(--color-highlight);
+	background-color: var(--color-navbar);
 }
 
 .compare-second-bar {

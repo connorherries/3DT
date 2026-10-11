@@ -11,7 +11,7 @@ from demo.analyze_data import (
     generate_analysis,
     position_averages,
     read_csv_robust,
-    retain_highest_impact,
+    trim_dataset,
 )
 
 
@@ -19,12 +19,13 @@ def test_updated_csv_is_cleaned_and_analysed():
     raw_data = read_csv_robust(INPUT_CSV)
     cleaned, report = clean_data(raw_data)
     all_metrics = calculate_metrics(cleaned)
-    featured, selection_report = retain_highest_impact(all_metrics)
-    expected = all_metrics.sort_values("impact", ascending=False, kind="stable").head(len(cleaned) - 100)
+    featured, selection_report = trim_dataset(all_metrics)
+    expected = all_metrics.sort_values("PTS", ascending=False, kind="stable").head(len(cleaned) - 200)
     analysed = calculate_metrics(featured)
 
-    assert len(analysed) == 482
-    assert selection_report["removed_bottom_impact_players"] == 100
+    assert len(analysed) == 382
+    assert selection_report["trimmed_players_count"] == 200
+    assert "players_before_trim" in selection_report
     assert featured["Player"].tolist() == expected["Player"].tolist()
     assert report["removed_invalid_rows"] >= 1
     assert report["removed_trade_split_rows"] >= 50
@@ -74,6 +75,6 @@ def test_analysis_exports_json_csv_and_chart(tmp_path: Path):
         "chart_points", "chart_rebounds", "chart_assists",
     }
     assert all(path.exists() and path.stat().st_size > 0 for path in files.values())
-    assert len(pd.read_json(files["players"])) == 482
+    assert len(pd.read_json(files["players"])) == 382
     assert "position_summary" in pd.read_json(files["summary"], typ="series")
     assert len({files[key].read_bytes() for key in ("chart_points", "chart_rebounds", "chart_assists")}) == 3

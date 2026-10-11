@@ -50,26 +50,36 @@ function showHomePage() {
 function showPlayersPage() {
 	const search = document.querySelector("#player-search");
 	const filter = document.querySelector("#position-filter");
+	const sortSelect = document.querySelector("#player-sort");
 	const list = document.querySelector("#player-list");
 	const count = document.querySelector("#player-count");
 
 	function updateList() {
 		const searchText = search.value.toLowerCase();
 		const position = filter.value;
+		const sortKey = sortSelect.value;
 		const matches = players.filter((player) => {
 			const nameMatches = player.name.toLowerCase().includes(searchText);
 			const positionMatches = position === "ALL" || player.position === position;
 			return nameMatches && positionMatches;
 		});
 
-		count.textContent = `${matches.length} of ${players.length} players`;
-		list.innerHTML = matches.length
-			? matches.map(makePlayerCard).join("")
+		const sortedMatches = [...matches].sort((first, second) => {
+			if (sortKey === "featured") return first.id - second.id;
+			const firstValue = Number(first[sortKey] ?? 0);
+			const secondValue = Number(second[sortKey] ?? 0);
+			return secondValue - firstValue;
+		});
+
+		count.textContent = `${sortedMatches.length} of ${players.length} players`;
+		list.innerHTML = sortedMatches.length
+			? sortedMatches.map(makePlayerCard).join("")
 			: `<p class="col">No players found. Try another search.</p>`;
 	}
 
 	search.addEventListener("input", updateList);
 	filter.addEventListener("change", updateList);
+	sortSelect.addEventListener("change", updateList);
 	updateList();
 }
 

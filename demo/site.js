@@ -41,23 +41,22 @@ document.querySelector("#site-header").innerHTML = `
 document.querySelector("#site-footer").innerHTML = `
 	<div class="container py-4">
 		<div class="row g-4">
-			<div class="col-md-5">
+			<div class="col-md-6">
 				<h2 class="h5">Basket Metrics</h2>
-				<p class="mb-0">NBA statistics for exploring player performance and learning the numbers behind the game.</p>
+				<p class="mb-0">A simple way to explore player stats, compare performance and learn the numbers behind basketball.</p>
 			</div>
 			<div class="col-md-3">
 				<h2 class="footer-header">Explore</h2>
 				<a href="players.html">Players</a><br>
 				<a href="compare.html">Compare</a><br>
-				<a href="learn.html">Learn the metrics</a><br>
+				<a href="learn.html">Learn</a><br>
 				<a href="quiz.html">Quiz</a>
 			</div>
-			<div class="col-md-4">
-				<h2 class="footer-header">Demo data</h2>
-				<p>Player statistics from Basketball Reference 2025-26</p>
-				<p class="mb-0">Demo forms do not save account details.</p>
+			<div class="col-md-3">
+				<h2 class="footer-header">Data</h2>
+				<p class="mb-0">Basketball stats are cleaned and displayed for learning.</p>
 			</div>
 		</div>
 		<hr>
-		<p class="mb-0 small">Educational project · Demonstration mode</p>
+		<p class="mb-0 small">Educational project · Demo mode</p>
 	</div>`;
