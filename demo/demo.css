@@ -1,20 +1,17 @@
-/* This stylesheet controls the look and feel of the whole project.
-   It sets the colours, spacing, navbar styling, button look, and the card and form panels
-   used across the pages. Because every page links to this CSS file, the site keeps a consistent brand.
-*/
+/* Shared styles: palette, spacing, navigation, cards, forms. */
 :root {
-	/* Main page text and background */
+	/* Basic page colors */
 	--color-page: #ffffff;
 	--color-text: #202722;
 	--color-muted: #68716a;
 
-	/* Navigation and footer */
+	/* Nav and footer colors */
 	--color-navbar: #203d38;
 	--color-navbar-text: #ffffff;
 	--color-footer: #203d38;
 	--color-footer-text: #ffffff;
 
-	/* Accent and panel colors */
+	/* Panels, highlights, accent bits */
 	--color-accent: #a83c2e;
 	--color-highlight: #c7d273;
 	--color-panel: #203d38;
@@ -22,7 +19,7 @@
 	--color-form-panel: #ffffff;
 }
 
-/* Main page look */
+/* Page basics */
 body {
 	background: var(--color-page);
 	color: var(--color-text);

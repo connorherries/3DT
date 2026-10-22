@@ -1,22 +1,20 @@
-// This file is the main behaviour layer for the project.
-// It takes the cleaned player dataset from generated/players.json and the summary metrics
-// from generated/analysis_summary.json, then fills in the home page, player list, comparison
-// page, learn page, and quiz page. In simple terms, this file is the link between the data
-// and the website screens.
+// Main page behavior. Generated player data + summary feed the views below.
 let players = [];
 let analysisSummary = null;
 
-// Simply escape text before it is inserted into HTML so names and stats do not break the page.
+// Escape player text before it goes into HTML.
 function escapeHtml(value) {
 	return String(value).replace(/[&<>"']/g, (character) => ({
 		"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
 	})[character]);
 }
 
+// Find the roster entry from an id in the page URL.
 function findPlayer(id) {
 	return players.find((player) => player.id === Number(id));
 }
 
+// A compact card for the player list.
 function makePlayerCard(player) {
 	return `
 		<div class="col-sm-6 col-lg-4">
@@ -39,8 +37,8 @@ function makePlayerCard(player) {
 		</div>`;
 }
 
-// The home page is a quick overview screen.
-// It shows the top players by impact so visitors can see the strongest performers immediately.
+
+// Impact leaders first, right on the home page.
 function showHomePage() {
 	const leaders = [...players].sort((a, b) => b.impact - a.impact).slice(0, 3);
 	const topPlayer = leaders[0];
@@ -53,8 +51,7 @@ function showHomePage() {
 		</a>`).join("");
 }
 
-// The player directory lets users search, filter, and sort the roster.
-// This is the main browsing page in the project because it connects the dataset to a usable UI.
+// Search, position filter, roster sorting; all wired up here.
 function showPlayersPage() {
 	const search = document.querySelector("#player-search");
 	const filter = document.querySelector("#position-filter");
@@ -62,6 +59,7 @@ function showPlayersPage() {
 	const list = document.querySelector("#player-list");
 	const count = document.querySelector("#player-count");
 
+	// Control changed? Run the list update again.
 	function updateList() {
 		const searchText = search.value.toLowerCase();
 		const position = filter.value;
@@ -91,8 +89,7 @@ function showPlayersPage() {
 	updateList();
 }
 
-// Each player card links to a profile page using an id in the URL.
-// This function reads that id, finds the matching player, and displays their key stats.
+// URL gives us the player id; fill in their profile.
 function showPlayerPage() {
 	const id = new URLSearchParams(location.search).get("id");
 	const player = findPlayer(id) || players[0];
@@ -129,8 +126,7 @@ function showPlayerPage() {
 		<a class="btn btn-success" href="compare.html?first=${player.id}">Compare this player</a>`;
 }
 
-// The compare page is designed for side-by-side analysis.
-// It lets a learner choose two players and visually see which one leads in each category.
+// Set up selectors and stat bars for both players.
 function showComparePage() {
 	const firstSelect = document.querySelector("#compare-first");
 	const secondSelect = document.querySelector("#compare-second");
@@ -143,6 +139,7 @@ function showComparePage() {
 	firstSelect.value = findPlayer(params.get("first"))?.id || players[0].id;
 	secondSelect.value = findPlayer(params.get("second"))?.id || players[1].id;
 
+	// Selection changed, refresh names and bars.
 	function updateComparison() {
 		const first = findPlayer(firstSelect.value);
 		const second = findPlayer(secondSelect.value);
@@ -173,8 +170,7 @@ function showComparePage() {
 	updateComparison();
 }
 
-// The learning page explains the meaning of the numbers.
-// It displays easy summary tables and swaps charts when the user changes the stat being viewed.
+// Position summary goes here; metric buttons swap the charts.
 function showLearnPage() {
 	const rows = analysisSummary.position_summary;
 	document.querySelector("#position-summary").innerHTML = rows.map((row) => `
@@ -200,8 +196,8 @@ function showLearnPage() {
 	}));
 }
 
-// The quiz turns the dataset into a quick test.
-// It randomly picks a stat and two players, then checks whether the user can identify the higher value.
+
+// Short quiz from player stats, new set when restarted.
 function showQuizPage() {
 	const questionTypes = [
 		{ stat: "points", text: "Who scored more points per game?" },
@@ -221,6 +217,7 @@ function showQuizPage() {
 	let score = 0;
 	let questions = [];
 
+	// Skip ties, and pairs we've already used.
 	function makeQuestions() {
 		const selected = [];
 		const used = new Set();
@@ -239,6 +236,7 @@ function showQuizPage() {
 		return selected;
 	}
 
+	// Show the next question, or the score when we're done.
 	function showQuestion() {
 		if (questionIndex === questions.length) {
 			quiz.innerHTML = `<div class="quiz-box text-center"><h1>Quiz complete</h1><p class="score-result">${score} / ${questions.length}</p><button id="restart-quiz" class="btn btn-success">Try again</button></div>`;
@@ -289,8 +287,7 @@ function showQuizPage() {
 	showQuestion();
 }
 
-// The login and signup pages are demo-only forms.
-// They do not save data anywhere, so the project can show the required assessment pages without a real backend.
+// Account forms are just demos; submitted details don't get stored.
 function showFormMessage() {
 	const form = document.querySelector("#demo-form");
 	form.addEventListener("submit", (event) => {
@@ -299,7 +296,9 @@ function showFormMessage() {
 	});
 }
 
+
 const page = document.body.dataset.page;
+// Hand off to the view this page asked for.
 function renderPage() {
 	if (page === "home") showHomePage();
 	if (page === "players") showPlayersPage();

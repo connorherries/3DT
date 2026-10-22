@@ -15,6 +15,7 @@ from demo.analyze_data import (
 )
 
 
+# Supplied file should clean up, trim down, positions should look right.
 def test_updated_csv_is_cleaned_and_analysed():
     raw_data = read_csv_robust(INPUT_CSV)
     cleaned, report = clean_data(raw_data)
@@ -35,6 +36,7 @@ def test_updated_csv_is_cleaned_and_analysed():
         assert tuple(position_averages(analysed, metric).index) == POSITION_ORDER
 
 
+# Small fixture for blanks, bad values, missing stats and traded-player rows.
 def test_cleaning_handles_blank_invalid_missing_and_trade_rows():
     rows = [
         ["Alpha Player", "alpha01", 25, "2TM", "PG", 60, 34.0, 0.400, 5.0, 7.0, 1.0, 0.5, 3.0, 25.0],
@@ -58,6 +60,7 @@ def test_cleaning_handles_blank_invalid_missing_and_trade_rows():
     assert cleaned["3P%"].notna().all()
 
 
+# Two bad inputs here, both should give readable errors.
 def test_missing_required_column_and_empty_cleaned_data_are_reported():
     with pytest.raises(ValueError, match="Missing required columns"):
         clean_data(pd.DataFrame({"Player": ["Only a name"]}))
@@ -67,6 +70,7 @@ def test_missing_required_column_and_empty_cleaned_data_are_reported():
         clean_data(empty)
 
 
+# Quick check the exports, including all three selectable charts.
 def test_analysis_exports_json_csv_and_chart(tmp_path: Path):
     files = generate_analysis(INPUT_CSV, tmp_path)
 

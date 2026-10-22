@@ -1,10 +1,4 @@
-"""Prepare the basketball dataset for the website.
-
-This script is the data engine behind the project: it reads the raw CSV, removes broken rows,
-cleans the numbers, trims the roster to a teaching-sized dataset, calculates impact metrics,
-and exports the JSON files that the front-end pages use. In simple terms, it transforms the
-original spreadsheet into a version that is easier to understand and display in the site.
-"""
+"""Clean up the basketball CSV, calculate metrics, write files the site uses."""
 from __future__ import annotations
 
 import argparse
@@ -18,9 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-# These paths tell the script where the raw dataset lives and where the generated website data should be written.
-# The generated folder is then used by demo.js to populate the pages, so this step is a key link between
-# the spreadsheet and the visual interface.
+# Supplied CSV lives here; generated files go in OUTPUT_DIR for the site.
 DEMO_DIR = Path(__file__).resolve().parent
 INPUT_CSV = DEMO_DIR / "data" / "csv"
 OUTPUT_DIR = DEMO_DIR / "generated"
@@ -36,7 +28,7 @@ CORE_NUMERIC_COLUMNS = [
 ]
 NUMERIC_COLUMNS = [*CORE_NUMERIC_COLUMNS, "3P%"]
 
-#links player data to photo
+# A few featured players have photos; the rest get no image.
 
 PHOTO_BY_PLAYER_ID = {
     "antetgi01": "Giannis.png",
@@ -69,7 +61,7 @@ POSITION_ORDER = ("PG", "SG", "SF", "PF", "C")
 
 
 def read_csv_robust(path: str | Path) -> pd.DataFrame:
-    """Read the CSV with common encodings while retaining blank rows for cleaning."""
+    """Try usual CSV encodings, leave blank rows for the cleaner to handle."""
     path = Path(path)
     decode_errors: list[str] = []
     for encoding in ("utf-8-sig", "utf-8", "cp1252"):
@@ -81,7 +73,7 @@ def read_csv_robust(path: str | Path) -> pd.DataFrame:
 
 
 def clean_data(data: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
-    """Validate fields, clean values, and keep one season-total row per player."""
+    """Check columns, tidy values, keep one season-total row per player."""
     missing_columns = [column for column in REQUIRED_COLUMNS if column not in data.columns]
     if missing_columns:
         raise ValueError(f"Missing required columns: {', '.join(missing_columns)}")
@@ -146,7 +138,7 @@ def trim_dataset(
     data: pd.DataFrame,
     trim_count: int = BOTTOM_PLAYERS_TO_REMOVE,
 ) -> tuple[pd.DataFrame, dict]:
-    """Reduce the dataset to a teaching-sized roster by dropping the lowest-scoring players."""
+    """Trim low scorers, make a smaller roster for the demo."""
     if trim_count < 0:
         raise ValueError("trim_count cannot be negative")
     if "PTS" not in data.columns:
@@ -167,7 +159,7 @@ def trim_dataset(
 
 
 def calculate_metrics(data: pd.DataFrame) -> pd.DataFrame:
-    """Calculate composite, standardized, percentile, and weighted metrics."""
+    """Add impact, percentile, z-score and balanced-score columns."""
     work = data.copy()
     points = work["PTS"].to_numpy(dtype=float)
     rebounds = work["TRB"].to_numpy(dtype=float)
@@ -178,14 +170,14 @@ def calculate_metrics(data: pd.DataFrame) -> pd.DataFrame:
 
     impact = points + 1.2 * rebounds + 1.5 * assists + 3.0 * (steals + blocks) - turnovers
     work["impact"] = impact
-    impact_std = float(np.std(impact))  # Standard deviation of impact
+    impact_std = float(np.std(impact))  # How spread out impact scores are.
     work["impact_z"] = (impact - float(np.mean(impact))) / impact_std if impact_std else np.zeros(len(work))
     work["points_percentile"] = pd.Series(points).rank(pct=True).to_numpy() * 100
 
     dimensions = np.column_stack((points, rebounds, assists, steals, blocks, work["3P%"].to_numpy(dtype=float)))
     means = np.mean(dimensions, axis=0)
     standard_deviations = np.std(dimensions, axis=0)
-    z_scores = np.divide(  # Calculate z-scores
+    z_scores = np.divide(  # Standardize each stat before its weight gets applied.
         dimensions - means,
         standard_deviations,
         out=np.zeros_like(dimensions),
@@ -197,7 +189,7 @@ def calculate_metrics(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def build_summary(data: pd.DataFrame, cleaning_report: dict) -> dict:
-    """Create concise cohort and position summaries for the learning page."""
+    """Bundle overall and position averages for the learning page."""
     position_rows = data.groupby("Pos").agg(
         player_count=("Player", "count"),
         average_points=("PTS", "mean"),
@@ -226,7 +218,7 @@ def build_summary(data: pd.DataFrame, cleaning_report: dict) -> dict:
 
 
 def make_player_records(data: pd.DataFrame) -> list[dict]:
-    """Map cleaned CSV records to the names and units used by the demo pages."""
+    """Turn cleaned rows into field names the front end expects."""
     records = []
     for index, row in data.iterrows():
         player_id = str(row.get("Player-additional", ""))
@@ -252,7 +244,7 @@ def make_player_records(data: pd.DataFrame) -> list[dict]:
 
 
 def ordered_position_names(available_positions) -> list[str]:
-    """Return standard positions in basketball order, then any extra labels."""
+    """Put positions in basketball order, sort any extras after."""
     available = set(available_positions)
     ordered = [position for position in POSITION_ORDER if position in available]
     ordered.extend(sorted(available - set(POSITION_ORDER)))
@@ -260,7 +252,7 @@ def ordered_position_names(available_positions) -> list[str]:
 
 
 def position_averages(data: pd.DataFrame, metric_column: str) -> pd.Series:
-    """Calculate one position average series in a stable left-to-right order."""
+    """Average a stat by position, same order as the charts."""
     means = data.groupby("Pos")[metric_column].mean()
     return means.reindex(ordered_position_names(means.index))
 
@@ -270,7 +262,7 @@ def plot_analysis(
     output_path: str | Path,
     average_metric: str = "points",
 ) -> Path:
-    """Save a trendline chart and a selectable position-average chart."""
+    """Draw the scoring trend and position chart, then save both."""
     if average_metric not in POSITION_METRICS:
         raise ValueError(f"Unsupported position-average metric: {average_metric}")
     metric_column, metric_label = POSITION_METRICS[average_metric]
@@ -312,7 +304,7 @@ def generate_analysis(
     input_path: str | Path = INPUT_CSV,
     output_dir: str | Path = OUTPUT_DIR,
 ) -> dict[str, Path]:
-    """Run the full CSV-to-cleaned-exports and visualization workflow."""
+    """Run the whole pipeline, raw CSV through JSON, CSV and chart exports."""
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     raw_data = read_csv_robust(input_path)

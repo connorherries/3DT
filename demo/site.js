@@ -1,7 +1,4 @@
-// This file builds the shared header and footer used on every page in the project.
-// It keeps the website consistent and makes navigation easy, while the individual pages
-// still handle their own content. The rest of the app loads player data from the
-// generated JSON files and the page-specific HTML decides what to display.
+// Shared page bits. Nav up top, footer below, page content in between.
 const pageLinks = [
 	["Home", "index.html"],
 	["Players", "players.html"],
@@ -14,6 +11,7 @@ const pageLinks = [
 ];
 
 const currentPage = location.pathname.split("/").pop() || "index.html";
+// Mark the current page's link active.
 const navigationLinks = pageLinks.map(([label, file]) => {
 	const active = currentPage === file ? "active" : "";
 	return `<li class="nav-item"><a class="nav-link ${active}" href="${file}">${label}</a></li>`;
@@ -21,7 +19,7 @@ const navigationLinks = pageLinks.map(([label, file]) => {
 
 
 
-//header code for all pages
+// Header markup, reused on every page.
 document.querySelector("#site-header").innerHTML = `
 	<nav class="navbar navbar-expand-lg navbar-dark site-navbar fixed-top">
 		<div class="container">
@@ -40,7 +38,7 @@ document.querySelector("#site-header").innerHTML = `
 
 
 
-//Footer code fro all pages
+// Footer too, shared across the site.
 document.querySelector("#site-footer").innerHTML = `
 	<div class="container py-4">
 		<div class="row g-4">
