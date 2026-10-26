@@ -21,9 +21,16 @@
 
 /* Page basics */
 body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
 	background: var(--color-page);
 	color: var(--color-text);
 	padding-top: 58px;
+}
+
+main {
+	flex: 1;
 }
 
 .site-navbar {
@@ -132,6 +139,74 @@ body {
 
 .compare-second-bar {
 	background-color: var(--color-accent);
+}
+
+.comparison-player {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	font-size: 1.5rem;
+}
+
+.comparison-player::before {
+	width: 0.75rem;
+	height: 0.75rem;
+	flex: 0 0 auto;
+	border-radius: 50%;
+	content: "";
+}
+
+.compare-first-label::before {
+	background: var(--color-navbar);
+}
+
+.compare-second-label::before {
+	background: var(--color-accent);
+}
+
+.comparison-stat {
+	padding: 1rem 0;
+	border-top: 1px solid #d8ded9;
+}
+
+.comparison-stat-heading {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 0.6rem;
+}
+
+.comparison-stat-heading h3 {
+	margin: 0;
+	font-size: 1rem;
+}
+
+.comparison-values {
+	display: flex;
+	gap: 1rem;
+	font-variant-numeric: tabular-nums;
+}
+
+.compare-first-value {
+	color: var(--color-navbar);
+	font-weight: 700;
+}
+
+.compare-second-value {
+	color: var(--color-accent);
+	font-weight: 700;
+}
+
+.comparison-bars {
+	display: grid;
+	gap: 0.4rem;
+}
+
+.compare-track {
+	height: 0.7rem;
+	border-radius: 2px;
+	background: #e8ece9;
 }
 
 #site-footer a {

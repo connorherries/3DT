@@ -147,21 +147,30 @@ function showComparePage() {
 
 		results.innerHTML = `
 			<div class="row g-4 mb-4">
-				<div class="col-md-6"><h2>${escapeHtml(first.name)}</h2><p class="text-secondary">${escapeHtml(first.team)} · ${escapeHtml(first.position)}</p></div>
-				<div class="col-md-6 text-md-end"><h2>${escapeHtml(second.name)}</h2><p class="text-secondary">${escapeHtml(second.team)} · ${escapeHtml(second.position)}</p></div>
+				<div class="col-md-6"><h2 class="comparison-player compare-first-label">${escapeHtml(first.name)}</h2><p class="text-secondary">${escapeHtml(first.team)} · ${escapeHtml(first.position)}</p></div>
+				<div class="col-md-6 text-md-end"><h2 class="comparison-player compare-second-label">${escapeHtml(second.name)}</h2><p class="text-secondary">${escapeHtml(second.team)} · ${escapeHtml(second.position)}</p></div>
 			</div>
 			${stats.map(([label, key]) => {
 				const max = Math.max(first[key], second[key]) || 1;
 				const firstWidth = Math.round(first[key] / max * 100);
 				const secondWidth = Math.round(second[key] / max * 100);
-				return `<div class="row align-items-center mb-3">
-					<div class="col-2">${first[key]}</div>
-					<div class="col-8"><p class="small text-center mb-1">${label}</p>
-						<div class="progress mb-1"><div class="progress-bar compare-first-bar" style="width: ${firstWidth}%"></div></div>
-						<div class="progress"><div class="progress-bar compare-second-bar" style="width: ${secondWidth}%"></div></div>
+				return `<section class="comparison-stat" aria-label="${label}">
+					<div class="comparison-stat-heading">
+						<h3>${label}</h3>
+						<div class="comparison-values" aria-hidden="true">
+							<span class="compare-first-value">${first[key]}</span>
+							<span class="compare-second-value">${second[key]}</span>
+						</div>
 					</div>
-					<div class="col-2 text-end">${second[key]}</div>
-				</div>`;
+					<div class="comparison-bars">
+						<div class="progress compare-track" role="progressbar" aria-label="${escapeHtml(first.name)} ${label}" aria-valuemin="0" aria-valuemax="${max}" aria-valuenow="${first[key]}">
+							<div class="progress-bar compare-first-bar" style="width: ${firstWidth}%"></div>
+						</div>
+						<div class="progress compare-track" role="progressbar" aria-label="${escapeHtml(second.name)} ${label}" aria-valuemin="0" aria-valuemax="${max}" aria-valuenow="${second[key]}">
+							<div class="progress-bar compare-second-bar" style="width: ${secondWidth}%"></div>
+						</div>
+					</div>
+				</section>`;
 			}).join("")}`;
 	}
 
@@ -291,6 +300,9 @@ function showQuizPage() {
 function showFormMessage() {
 	const form = document.querySelector("#demo-form");
 	const nameInput = form.querySelector("#name");
+	const passwordInput = form.querySelector("#password");
+	const confirmPasswordInput = form.querySelector("#confirm-password");
+	const message = document.querySelector("#form-message");
 	const updateNameValidity = () => {
 		if (nameInput) {
 			const name = nameInput.value.trim();
@@ -300,12 +312,24 @@ function showFormMessage() {
 			nameInput.setCustomValidity(error);
 		}
 	};
+	const updatePasswordValidity = () => {
+		if (confirmPasswordInput) {
+			const passwordsMatch = confirmPasswordInput.value === passwordInput.value;
+			confirmPasswordInput.setCustomValidity(passwordsMatch ? "" : "Passwords do not match.");
+		}
+	};
 	nameInput?.addEventListener("input", updateNameValidity);
+	passwordInput?.addEventListener("input", updatePasswordValidity);
+	confirmPasswordInput?.addEventListener("input", updatePasswordValidity);
+	form.addEventListener("input", () => {
+		message.textContent = "";
+	});
 	form.addEventListener("submit", (event) => {
 		event.preventDefault();
 		updateNameValidity();
+		updatePasswordValidity();
 		if (!form.reportValidity()) return;
-		document.querySelector("#form-message").textContent = "Demo submitted. No information was saved.";
+		message.textContent = "Demo submitted. No information was saved.";
 	});
 }
 
