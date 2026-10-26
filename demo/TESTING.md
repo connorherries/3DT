@@ -1,6 +1,6 @@
 # Test Record
 
-Date: 2026-10-11
+Date: 2026-10-26
 
 ## Automated tests
 
@@ -14,25 +14,21 @@ Result: 4 passed.
 
 | Test case | Expected result | Observed result |
 |---|---|---|
-| Updated CSV import and analysis | Clean records, derive metrics, and retain one record per player | 582 cleaned; 482 featured; all impact values present |
+| Updated CSV import and analysis | Clean records, derive metrics, and retain one record per player | 582 cleaned; 382 featured; all impact values present |
 | League summary row | Reject non-player row with missing core statistics | 1 invalid row removed |
 | Traded player totals | Use the `2TM` aggregate instead of team-level splits | 132 split rows removed |
 | Remaining duplicate player IDs | Keep one record per player | 19 duplicates removed |
 | Missing three-point percentage | Median-impute and report count and value | 51 values filled with median `0.343` |
-| Remove lowest impact players | Exclude exactly the 100 lowest composite-impact records | 100 removed; 482 retained |
+| Remove lowest-scoring players | Exclude exactly the 200 lowest points-per-game records | 200 removed; 382 retained |
 | Synthetic blank row | Remove the blank player record | 1 blank row removed |
 | Synthetic malformed games value | Remove the invalid core-stat row | 1 invalid row removed |
 | Synthetic missing percentage | Fill from available median | Output contains no missing percentage |
 | Missing required columns / no valid rows | Raise a clear `ValueError` | Both cases tested |
 | Exports | Create player JSON, summary JSON, cleaned CSV, and three metric charts | All six files created |
 
-## Browser smoke checks
+## Browser checks
 
-- Home page displayed CSV-derived leaders.
-- Player directory loaded 482 featured records; searching `Luka` returned two matching names.
-- Comparison page loaded 482 player options and rendered 12 progress bars for its six metrics.
-- Learning page displayed five position groups and loaded the generated chart (1920 pixels wide); metric buttons switch charts and keep positions ordered PG, SG, SF, PF, C.
-- Quiz completed all eight randomized questions and showed the score screen.
+The previous browser smoke checks were against a build with 482 players. They are stale because the current pipeline produces 382 featured players. Re-run and record browser checks for the current build before using them as assessment evidence.
 
 ## Remaining assessment evidence
 

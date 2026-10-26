@@ -290,8 +290,17 @@ function showQuizPage() {
 // Account forms are just demos; submitted details don't get stored.
 function showFormMessage() {
 	const form = document.querySelector("#demo-form");
+	const nameInput = form.querySelector("#name");
+	const updateNameValidity = () => {
+		if (nameInput) {
+			nameInput.setCustomValidity(nameInput.value.trim().length < 2 ? "Enter a name with at least 2 characters." : "");
+		}
+	};
+	nameInput?.addEventListener("input", updateNameValidity);
 	form.addEventListener("submit", (event) => {
 		event.preventDefault();
+		updateNameValidity();
+		if (!form.reportValidity()) return;
 		document.querySelector("#form-message").textContent = "Demo submitted. No information was saved.";
 	});
 }

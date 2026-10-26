@@ -27,6 +27,12 @@ The pipeline writes `generated/players.json`, `generated/analysis_summary.json`,
 - Each chart has two panels: a points-versus-assists scatter plot with a NumPy least-squares trendline, and the selected position average for points, rebounds, or assists. The Learn page buttons switch among these pre-generated Matplotlib charts. Position bars always follow PG, SG, SF, PF, C order.
 - `analysis_summary.json` records cleaning counts, summary statistics, and positional averages. The demo loads the generated player JSON and uses the generated summary and chart on its learning page.
 
+## 91906 assessment fit
+
+NZQA standard 91906 is about using complex programming techniques to develop a computer program. In this project, `analyze_data.py` is the main program; the website displays its output. Techniques to understand and explain include splitting the pipeline into functions, validating and cleaning records, handling duplicate and traded-player rows, using pandas and NumPy for calculations and ranking, and reading and writing files. The tests show how selected cases are checked.
+
+Use the teacher's assessment brief as the source of requirements. Keep your own dated design decisions, test results, feedback, and changes as you work, and be ready to explain the code yourself. Do not invent or backdate process evidence; this README describes the project but does not prove authorship or determine an assessment result.
+
 ## Dataset provenance
 
 The supplied file is named `data/csv` and has NBA player-stat columns, but it does not identify its season or source in the file itself. Confirm and record the original source, access date, and teacher approval here before final assessment submission. Do not describe the data as a particular NBA season until its provenance is verified.
