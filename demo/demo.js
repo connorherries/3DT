@@ -293,7 +293,11 @@ function showFormMessage() {
 	const nameInput = form.querySelector("#name");
 	const updateNameValidity = () => {
 		if (nameInput) {
-			nameInput.setCustomValidity(nameInput.value.trim().length < 2 ? "Enter a name with at least 2 characters." : "");
+			const name = nameInput.value.trim();
+			const error = name.length < 2
+				? "Enter a name with at least 2 characters."
+				: /[0-9]/.test(name) ? "Names cannot contain numbers." : "";
+			nameInput.setCustomValidity(error);
 		}
 	};
 	nameInput?.addEventListener("input", updateNameValidity);

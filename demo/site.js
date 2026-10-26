@@ -45,6 +45,8 @@ document.querySelector("#site-footer").innerHTML = `
 			<div class="col-md-6">
 				<h2 class="h5">Basket Metrics</h2>
 				<p class="mb-0">A simple way to explore player stats, compare performance and learn the numbers behind basketball.</p>
+				<p> </p>
+				<p class="mb-0">Connor Herries 3DT</p>
 			</div>
 			<div class="col-md-3">
 				<h2 class="footer-header">Explore</h2>
